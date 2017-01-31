@@ -23,19 +23,17 @@ EOL
 # Python
 brew install python python3 
 brew cask install pycharm dash
-pip install virtualenv
-pip3 install virtualenv
+pip install virtualenv tox ptpython
+pip3 install virtualenv tox ptpython
 
 # Turn off annoying auto "correction"
 defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-# Trackpad
-# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-# defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+# Misc
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+defaults write com.apple.Safari IncludeDebugMenu -bool true
 
 # Fish
 brew install fish
