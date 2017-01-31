@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Homebrew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install cask curl textmate
+
+# git
+brew install tig
+git config --global alias.co checkout
+cat > /usr/local/bin/st << EOL
+#!/bin/bash
+tig status
+EOL
+chmod +x /usr/local/bin/st
+
+# SSH
+ssh-keygen
+cat > ~/.ssh/config <<EOL
+Host *
+    UseKeychain yes
+EOL
+
+# Python
+brew install python python3 
+brew cask install pycharm dash
+pip install virtualenv
+pip3 install virtualenv
+
+# Turn off annoying auto "correction"
+defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Trackpad
+# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+# defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+
+# Fish
+brew install fish
+echo /usr/local/bin/fish | sudo tee -a /etc/shells
+chsh -s /usr/local/bin/fish
+curl -L http://get.oh-my.fish | fish
+omf install robbyrussell
+
+# Remove dock items
+curl https://raw.githubusercontent.com/kcrawford/dockutil/master/scripts/dockutil > dockutil
+chmod +x dockutil
+./dockutil --remove "Siri"
+./dockutil --remove "LaunchPad" 
+./dockutil --remove "Contacts"
+./dockutil --remove "Siri"
+./dockutil --remove "Launchpad"
+./dockutil --remove "Safari"
+./dockutil --remove "Mail"
+./dockutil --remove "Contact"
+./dockutil --remove "Calendar"
+./dockutil --remove "Notes"
+./dockutil --remove "Reminders"
+./dockutil --remove "Maps"
+./dockutil --remove "Messages"
+./dockutil --remove "FaceTime"
+./dockutil --remove "Pages"
+./dockutil --remove "Numbers"
+./dockutil --remove "Keynote"
+./dockutil --remove "iTunes"
+./dockutil --remove "iBooks"
+./dockutil --remove "App Store"
+./dockutil --remove "System Preferences"
+
+# Check out all github repos
+cd ~/Projects
+virtualenv mac_setup_venv
+mac_setup_venv/bin/pip install PyGithub
+mkdir ~/Projects
+cat > mac_setup_github_checkout.py <<EOL
+#!mac_setup_venv/bin/python
+from github import Github
+from subprocess import check_output, CalledProcessError
+from getpass import getuser
+
+g = Github()
+for repo in g.get_user(getuser()).get_repos():
+    try:
+        check_output('git clone %s' % repo.clone_url, shell=True)
+    except CalledProcessError as e:
+        print('Failed to checkout %s: %s' % (repo.clone_url, e))
+
+EOL
+chmod +x mac_setup_github_checkout.py
+cd -
+echo "After you've added your public SSH key to github, go to ~/Projects and run mac_setup_github_checkout.py to checkout all your github repositories (edit the file if your username and github username don't match)"
