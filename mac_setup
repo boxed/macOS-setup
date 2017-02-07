@@ -25,7 +25,7 @@ EOL
 brew install python python3 
 brew cask install pycharm dash
 pip install virtualenv tox ptpython
-pip3 install virtualenv tox ptpython
+pip3 install virtualenv tox ptpython watchdog
 
 # Turn off annoying auto "correction"
 defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
@@ -35,6 +35,9 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 # Misc
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 defaults write com.apple.Safari IncludeDebugMenu -bool true
+
+# MySQL
+brew cask install sequel-pro
 
 # Fish
 brew install fish
